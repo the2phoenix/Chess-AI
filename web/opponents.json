@@ -1,0 +1,77 @@
+{
+  "gene_names": [
+    "material",
+    "piece_square",
+    "mobility",
+    "king_safety",
+    "pawn_structure"
+  ],
+  "default": "veteran",
+  "opponents": [
+    {
+      "id": "hatchling",
+      "label": "Hatchling \u2014 Gen 0, shallow",
+      "genome": [
+        0.44647792921402907,
+        1.2548664448111786,
+        1.8954178849140113,
+        1.1542058972349973,
+        0.7933609493015603
+      ],
+      "depth": 1,
+      "blurb": "Generation 0's best genome (42% vs baseline), looking just one move ahead. Beatable."
+    },
+    {
+      "id": "fledgling",
+      "label": "Fledgling \u2014 Gen 0, deeper",
+      "genome": [
+        0.44647792921402907,
+        1.2548664448111786,
+        1.8954178849140113,
+        1.1542058972349973,
+        0.7933609493015603
+      ],
+      "depth": 2,
+      "blurb": "The same early genome, but now thinking two plies ahead."
+    },
+    {
+      "id": "adept",
+      "label": "Adept \u2014 Champion, fast",
+      "genome": [
+        0.5077528965890037,
+        0.1814260266877301,
+        1.9478830692035718,
+        0.5792185726633525,
+        0.24760392229929118
+      ],
+      "depth": 2,
+      "blurb": "The evolved champion's weights, playing quickly."
+    },
+    {
+      "id": "veteran",
+      "label": "Veteran \u2014 Champion",
+      "genome": [
+        0.5077528965890037,
+        0.1814260266877301,
+        1.9478830692035718,
+        0.5792185726633525,
+        0.24760392229929118
+      ],
+      "depth": 3,
+      "blurb": "The champion at full default depth."
+    },
+    {
+      "id": "champion",
+      "label": "Champion \u2014 deep",
+      "genome": [
+        0.5077528965890037,
+        0.1814260266877301,
+        1.9478830692035718,
+        0.5792185726633525,
+        0.24760392229929118
+      ],
+      "depth": 4,
+      "blurb": "The fully evolved champion (71% vs baseline, from g3-3), thinking hard."
+    }
+  ]
+}

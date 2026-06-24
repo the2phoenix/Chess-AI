@@ -1,0 +1,6 @@
+# Darwin's Gambit — training/engine dependencies (offline, Python)
+# Phase 1 needs only python-chess (rules + move generation).
+# NumPy is listed now because the Phase 2 GA and the V2 NN evaluator will use it.
+
+chess>=1.11
+numpy>=1.26

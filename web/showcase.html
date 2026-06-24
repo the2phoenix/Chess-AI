@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Darwin's Gambit — Evolution Showcase</title>
+  <link rel="stylesheet" href="showcase.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1>Darwin's Gambit</h1>
+      <p class="tagline">Watch an evaluation function teach itself chess — generation by generation.</p>
+    </div>
+    <nav class="tabs">
+      <button class="tab active" data-tab="colosseum">Colosseum</button>
+      <button class="tab" data-tab="tournament">Tournament</button>
+      <button class="tab" data-tab="bonding">Genomes Bonding</button>
+      <button class="tab" data-tab="evolution">Evolution &amp; Analytics</button>
+    </nav>
+  </header>
+
+  <p id="loading" class="loading">Loading run…</p>
+
+  <!-- ================= COLOSSEUM ================= -->
+  <section id="colosseum" class="view">
+    <div class="toolbar">
+      <label>Generation
+        <select id="colGen"></select>
+      </label>
+      <button id="colPlay" class="btn primary">▶ Play all</button>
+      <button id="colRestart" class="btn">⟲ Restart</button>
+      <label class="speed">Speed
+        <input id="colSpeed" type="range" min="1" max="20" value="8" />
+      </label>
+      <span id="colStatus" class="status"></span>
+    </div>
+    <p class="hint-line">Every game of this generation's tournament, played at once. Click any board to feature it with an eval bar.</p>
+    <div id="colGrid" class="grid"></div>
+  </section>
+
+  <!-- ================= TOURNAMENT ================= -->
+  <section id="tournament" class="view hidden">
+    <div class="toolbar">
+      <button id="tourPlay" class="btn primary">▶ Run tournament</button>
+      <button id="tourReveal" class="btn">Reveal all</button>
+      <span id="tourStatus" class="status"></span>
+    </div>
+    <p class="hint-line">Each generation's champion enters a knockout. Winners advance and <b>absorb the loser</b> (winner-dominant merge) into a stronger hybrid, round after round, until one ultimate champion remains. Click any match to replay it with an eval bar.</p>
+    <div id="champBanner" class="champ-banner hidden"></div>
+    <div id="bracket" class="bracket"></div>
+  </section>
+
+  <!-- ================= BONDING ================= -->
+  <section id="bonding" class="view hidden">
+    <div class="toolbar">
+      <label>Breeding into generation
+        <select id="bondGen"></select>
+      </label>
+      <button id="bondPrev" class="btn">‹ Prev</button>
+      <button id="bondNext" class="btn">Next ›</button>
+      <button id="bondPlay" class="btn primary">▶ Play all</button>
+      <span id="bondStatus" class="status"></span>
+    </div>
+    <p class="hint-line">Two parent genomes cross over into a child: each gene is inherited from one parent (lines), and mutations nudge it (sparks). Real lineage from the run — nothing here is faked.</p>
+    <div id="bondStage" class="bond-stage"></div>
+  </section>
+
+  <!-- ================= EVOLUTION ================= -->
+  <section id="evolution" class="view hidden">
+    <div id="evoSummary" class="evo-summary"></div>
+
+    <h3 class="chart-title">Strength vs the baseline (is it getting better?)</h3>
+    <p class="hint-line">Each generation's strongest genome, benchmarked against the fixed hand-tuned baseline. Above 50% means the evolved engine beats the starting weights.</p>
+    <div id="curveWrap" class="curve-wrap"></div>
+
+    <h3 class="chart-title">How well the population performs (fitness spread)</h3>
+    <p class="hint-line">Best, average, and weakest tournament score each generation — a rising/​tightening band means the whole pool is improving, not just one lucky genome.</p>
+    <div id="fitnessWrap" class="curve-wrap"></div>
+
+    <h3 class="chart-title">How the genome is evolving (weight drift)</h3>
+    <p class="hint-line">The champion's five evaluation weights over time — watch which features the engine learns to value (and which it discards).</p>
+    <div id="genesWrap" class="curve-wrap"></div>
+
+    <div id="bestPanel" class="best-panel"></div>
+  </section>
+
+  <!-- ================= FEATURED GAME MODAL ================= -->
+  <div id="featured" class="modal hidden">
+    <div class="modal-card">
+      <button id="featClose" class="modal-close" aria-label="Close">✕</button>
+      <h2 id="featTitle">Featured game</h2>
+      <div class="feat-body">
+        <div class="evalbar"><div id="featEvalFill" class="evalbar-fill"></div></div>
+        <div id="featBoard" class="board big"></div>
+        <div class="feat-side">
+          <div id="featClock" class="clock">move 0</div>
+          <div id="featEvalText" class="eval-text">+0.0</div>
+          <div id="featResult" class="feat-result"></div>
+          <div class="feat-controls">
+            <button id="featPlay" class="btn primary">▶</button>
+            <button id="featRestart" class="btn">⟲</button>
+            <input id="featScrub" type="range" min="0" max="0" value="0" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="showcase.js"></script>
+</body>
+</html>

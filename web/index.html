@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darwin's Gambit — Engine Viewer</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <h1>Darwin's Gambit <span class="tag">engine viewer</span></h1>
+      <p class="subtitle">A self-taught chess engine. Watch it play itself, or take it on.</p>
+    </header>
+
+    <main class="layout">
+      <!-- Eval bar: White advantage grows from the bottom -->
+      <div class="evalbar" title="Engine evaluation (White's perspective)">
+        <div id="evalFill" class="evalfill"></div>
+        <span id="evalText" class="evaltext">0.0</span>
+      </div>
+
+      <!-- The board -->
+      <div class="board-wrap">
+        <div id="board" class="board" aria-label="chess board"></div>
+      </div>
+
+      <!-- Controls + status -->
+      <aside class="panel">
+        <section class="auth">
+          <div id="authSignedOut" class="hidden">
+            <button id="authGoogle" class="google-btn">
+              <span class="g-mark">G</span> Continue with Google
+            </button>
+            <div class="auth-or"><span>or use email</span></div>
+            <div class="auth-fields">
+              <input id="authEmail" type="email" placeholder="email" autocomplete="email" />
+              <input id="authPassword" type="password" placeholder="password" autocomplete="current-password" />
+            </div>
+            <div class="auth-actions">
+              <button id="authSignIn" class="primary">Sign in</button>
+              <button id="authSignUp">Sign up</button>
+            </div>
+          </div>
+          <div id="authSignedIn" class="hidden">
+            <span class="auth-who">Signed in as <strong id="authWho"></strong></span>
+            <button id="authSignOut">Sign out</button>
+          </div>
+          <div id="authMsg" class="auth-msg"></div>
+        </section>
+
+        <div class="mode-switch">
+          <button id="modePlay" class="mode-btn active">Play vs Engine</button>
+          <button id="modeWatch" class="mode-btn">Watch AI vs AI</button>
+        </div>
+
+        <div class="controls">
+          <label class="ctl" id="colorCtl">
+            Play as
+            <select id="colorSelect">
+              <option value="white">White</option>
+              <option value="black">Black</option>
+            </select>
+          </label>
+
+          <label class="ctl" id="opponentCtl">
+            Opponent
+            <select id="opponentSelect"></select>
+          </label>
+
+          <label class="ctl" id="adaptiveCtl">
+            Adaptive
+            <select id="adaptiveSelect">
+              <option value="off" selected>Off — fixed strength</option>
+              <option value="on">On — learns your style</option>
+            </select>
+          </label>
+
+          <label class="ctl hidden" id="depthCtl">
+            Engine depth
+            <select id="depthSelect">
+              <option value="1">1 — instant</option>
+              <option value="2">2 — fast</option>
+              <option value="3" selected>3 — default</option>
+              <option value="4">4 — stronger</option>
+            </select>
+          </label>
+        </div>
+
+        <p id="opponentBlurb" class="opponent-blurb"></p>
+        <p id="adaptiveProfile" class="opponent-blurb hidden"></p>
+
+        <div class="actions">
+          <button id="newGame" class="primary">New game</button>
+          <button id="watchStart" class="hidden">▶ Start</button>
+          <button id="watchPause" class="hidden">⏸ Pause</button>
+          <button id="saveGame" class="hidden">Save game</button>
+        </div>
+
+        <div class="status">
+          <div id="statusLine" class="status-line">New game — White to move.</div>
+          <div id="thinking" class="thinking hidden">Engine is thinking…</div>
+        </div>
+
+        <div class="moves">
+          <h2>Moves</h2>
+          <ol id="moveList" class="move-list"></ol>
+        </div>
+
+        <div id="myGames" class="my-games hidden">
+          <h2>My games</h2>
+          <ul id="gamesList" class="games-list"></ul>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Promotion picker (hidden until needed) -->
+    <div id="promoOverlay" class="overlay hidden">
+      <div class="promo-box">
+        <p>Promote to:</p>
+        <div class="promo-choices">
+          <button data-piece="q" class="promo-piece">&#9819;</button>
+          <button data-piece="r" class="promo-piece">&#9820;</button>
+          <button data-piece="b" class="promo-piece">&#9821;</button>
+          <button data-piece="n" class="promo-piece">&#9822;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Public runtime config (engine API base) and Supabase config (your public
+       URL + anon key) load first, then the game logic, then the auth module. -->
+  <script src="/app-config.js"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/app.js"></script>
+  <script type="module" src="/auth.js"></script>
+</body>
+</html>

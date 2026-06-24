@@ -1,0 +1,24 @@
+# Render Blueprint — the Python engine API backend for Darwin's Gambit.
+#
+# The static frontend (Vercel) calls this service for live play: legal moves,
+# engine replies, the adaptive opponent, and pool ingest. Heavy compute (the
+# evolution pipeline) stays OFFLINE on Colab — this only serves fast per-move
+# search, so the free instance is enough for casual play.
+#
+# Deploy: push to GitHub, then on render.com -> New -> Blueprint -> pick the repo.
+services:
+  - type: web
+    name: darwins-gambit-api
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r training/requirements.txt
+    startCommand: python web/server.py
+    envVars:
+      # Render injects PORT; server.py reads it and binds 0.0.0.0.
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      # Lock this to your Vercel URL once you have it (e.g.
+      # https://darwins-gambit.vercel.app) to stop other sites calling your API.
+      - key: DARWIN_CORS_ORIGIN
+        value: "*"
