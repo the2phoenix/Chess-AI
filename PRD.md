@@ -53,7 +53,8 @@ A continual-learning loop: games (from self-play and human play) accumulate into
 - Continual experience-pool pipeline (F5).
 
 **Later / optional:**
-- Live server-side play via FastAPI backend.
+- Hosting the Python engine API (`web/server.py`) so live play works on the
+  deployed site, not just locally.
 - Leaderboards, ELO estimation, shareable game replays.
 
 ## 7. Success metrics

@@ -86,9 +86,9 @@ create index if not exists games_user_created_idx
 -- serialised OpponentModel (training/opponent_model/model.py:to_dict) as JSON:
 -- move habits, recurring-mistake positions, games seen. The *base* engine is
 -- never personalised (GSD §4) — only this per-user layer. Compute that reads/
--- writes it runs server-side (the local viewer, or the optional FastAPI
--- backend); the browser never runs the Python engine. RLS still scopes every
--- row to its owner.
+-- writes it runs server-side (the local viewer, or a hosted instance of the
+-- Python engine API); the browser never runs the Python engine. RLS still
+-- scopes every row to its owner.
 create table if not exists public.opponent_models (
   user_id     uuid primary key default auth.uid() references auth.users (id) on delete cascade,
   updated_at  timestamptz not null default now(),

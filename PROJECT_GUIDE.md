@@ -15,7 +15,7 @@ play-vs-adaptive-AI. See `PRD.md` for product, `GSD.md` for system design,
 ## Stack
 
 - **Engine + training (offline, Python):** python-chess, NumPy, multiprocessing.
-  Runs on Colab/Codespaces.
+  Runs on Google Colab (CPU) or a laptop.
 - **Frontend:** HTML/CSS/JS (no build step); deploys static to Vercel.
 - **Auth + data:** Supabase (Postgres + Auth) — primary. **One database only.**
 - **Optional backend:** the Python engine API on Render (for live play).
@@ -71,7 +71,6 @@ The MVP (phases 1-5) shipped and was verified before the V2 work.
   Python writes and JS reads.
 - Keep `engine/`, `ga/`, `chess_io/`, `opponent_model/` as clean, reusable
   modules.
-- Update `CHANGELOG.md` with each meaningful change.
 
 ## Design principle
 

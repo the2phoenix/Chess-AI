@@ -20,7 +20,7 @@ This is **not** an attempt at an unbeatable, superhuman engine — that needs da
 
 ## Status
 
-**Build complete — all phases shipped** (engine → GA → showcase → play-vs-trained → auth → NN evaluator → adaptive opponent → continual pipeline). 45 tests across 5 suites. See `CHANGELOG.md`.
+**Build complete — all phases shipped** (engine → GA → showcase → play-vs-trained → auth → NN evaluator → adaptive opponent → continual pipeline). 45 tests across 5 suites.
 
 ## Tech stack
 
@@ -79,7 +79,6 @@ Upload `training.zip` to `notebooks/day_night_pipeline.ipynb` on Google Colab an
 /notebooks       Colab training notebooks
 PRD.md TRD.md GSD.md UIUX.md   Product & system docs
 PROJECT_GUIDE.md        Project context + rules
-CHANGELOG.md     Version history
 ```
 
 ## Documentation

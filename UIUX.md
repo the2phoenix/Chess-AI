@@ -16,6 +16,11 @@
 
 ## 3. Key screens
 
+> This is the UX design spec. The shipped viewer implements its core — the board,
+> eval bar, move list, the three modes, the adaptive readout, and the full
+> Showcase (Colosseum, Tournament, Genomes Bonding, Analytics). Per-move clocks
+> and the speed slider were descoped to keep the MVP focused.
+
 ### Home / Mode select
 Three clear cards: **Watch AI vs AI**, **Play the Trained AI**, **Play the Adaptive AI**. Short one-line descriptions. Login/profile in the corner (optional for watching, required for adaptive).
 
@@ -48,8 +53,9 @@ Three clear cards: **Watch AI vs AI**, **Play the Trained AI**, **Play the Adapt
 - Clear turn indicator; legal-move hints toggle.
 
 ### Play vs Adaptive
-- A subtle "**Adapting to you**" indicator and a small note like "Games played against you: 7" so the personalization is felt.
-- After the game: "It learned X about your play" summary (e.g., "you tend to leave the king-side weak").
+- An **Adaptive** toggle, plus a live profile readout so the personalization is
+  felt: games learned, positions known, recurring habits to punish, and a
+  "sharpness" that climbs as the model sees more of your play.
 
 ### Auth / Profile
 - Minimal sign-up/login (Supabase). Profile shows record, estimated rating, and games history with replay links.
@@ -61,7 +67,7 @@ Board, eval bar, dual clock, move list, mode card, generation picker, speed slid
 ## 5. Interaction & feedback
 
 - Smooth piece movement; highlight last move and (for human) legal targets.
-- Distinct, clear end states: "Checkmate — White wins," "Draw by repetition," "Black flagged."
+- Distinct, clear end states: "Checkmate — White wins," "Stalemate — draw," "Draw — perpetual check." (Plain repetition does not draw — a deliberate house rule; the engine plays on.)
 - Loading states while weights/games fetch — never a frozen blank board.
 
 ## 6. Responsive

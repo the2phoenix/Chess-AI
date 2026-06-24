@@ -1,22 +1,31 @@
-# training/ — Darwin's Gambit engine (offline Python)
+# training/ — Darwin's Gambit engine + training (offline Python)
 
-The offline, heavy half of the project: the chess engine and (later) the genetic
-algorithm that evolves it. The deployed web frontend never runs this code — it
-only reads the small artifacts (`weights.json`, PGN) this side produces.
+The offline, heavy half of the project: the chess engine, the genetic algorithm
+that evolves it, the per-user adaptive opponent, and the continual training
+pipeline. The deployed web frontend never runs this code — it only reads the
+small artifacts (`weights.json`, `nn_weights.json`, `showcase.json`, PGN) this
+side produces.
 
-## Status: Phase 1 (Engine MVP) ✅
+Pure-Python + NumPy, CPU-parallel via `multiprocessing`. No PyTorch, no GPU.
 
-What exists now:
+## What's here
 
 - **Search** (`engine/search.py`) — minimax with alpha-beta pruning, iterative
-  deepening, move ordering, and depth-adjusted mate scores. This is the *fixed*
-  half of the engine; it never evolves.
-- **Evaluation** (`engine/evaluation.py`) — a handcrafted, weighted sum of
-  features (material, piece-square tables, mobility, king safety, pawn
-  structure). The weight vector is a `Genome` — deliberately structured so
-  Phase 2's GA can evolve it. No human opening theory or game data is used.
-- **Engine** (`engine/engine.py`) — wraps search + evaluation behind a small API
-  (`select_move`, `analyse`, `eval_bar_score`).
+  deepening, move ordering, depth-adjusted mate scores. The *fixed* half of the
+  engine; it never evolves.
+- **Evaluation** (`engine/evaluation.py`) — a handcrafted weighted sum of features
+  (material, piece-square tables, mobility, king safety, pawn structure). The
+  weight vector is a `Genome` the GA evolves. No human opening theory or game data.
+- **Neural evaluator** (`engine/nn_eval.py`) — a tiny NumPy MLP (10 features → 8
+  hidden → 1, 97 weights) used as a *residual* on the handcrafted eval. The GA
+  evolves its weights directly (no backprop).
+- **Genetic algorithm** (`ga/`) — genome operators, self-play matches, parallel
+  round-robin tournaments + baseline benchmark, the evolution loop (elitism +
+  tournament selection), lineage logging, and a knockout "tournament of champions".
+- **Adaptive opponent** (`opponent_model/`) — a per-user habit/mistake model and
+  an `AdaptiveEngine` that exploits it on top of a fixed strong base (Mode F3).
+- **Continual pipeline** (`experience_pool.py`, `deploy.py`, `pipeline.py`) — the
+  `collect → train → deploy` loop with gated promotion and a versioned registry.
 - **chess_io** (`chess_io/`) — PGN export (JSON for weights, PGN for games).
 
 ## Setup
@@ -31,51 +40,56 @@ pip install -r requirements.txt
 
 ## Try it
 
-Watch the engine play itself a full, legal game (the Phase 1 acceptance check):
-
 ```bash
-python selfplay.py                 # depth-3 game, prints the move list + PGN
-python selfplay.py --depth 2 --quiet
-python selfplay.py --time 0.5      # 0.5s/move via iterative deepening
-python selfplay.py --pgn games/demo.pgn
-```
+# Engine sanity: one legal self-play game (prints move list + PGN)
+python selfplay.py --depth 2
 
-Play against it yourself:
+# Play it in the terminal
+python play.py --color black --depth 3
 
-```bash
-python play.py                     # you are White
-python play.py --color black --depth 4
+# Evolution: the rising strength curve vs a fixed baseline
+python evolve.py
+python evolve.py --nn               # evolve the neural-net evaluator instead
+
+# Adaptive opponent: model learns a habitual user over sessions
+python adaptive_demo.py --sessions 5
+
+# Continual day/night pipeline
+python pipeline.py status
+python pipeline.py --depth 2 collect --games 10
+python pipeline.py --depth 2 train --population 12 --generations 5
 ```
 
 ## Tests
 
 ```bash
-python -m pytest -q                # if pytest is installed
-python tests/test_engine.py        # or run directly, no pytest needed
+python tests/test_engine.py
+python tests/test_ga.py
+python tests/test_nn.py
+python tests/test_opponent_model.py
+python tests/test_pipeline.py
 ```
 
-The tests assert the engine only ever plays legal moves, finds a mate-in-one,
-grabs a hanging queen, and that the evaluation is material-sane and
-colour-symmetric.
+They cover legality + tactics + eval symmetry, the GA operators and a full tiny
+evolution run, the NN evaluator, the adaptive opponent model, and the experience
+pool / deploy registry / collect-train-deploy cycle.
 
 ## Layout
 
 ```
 engine/
   evaluation.py   handcrafted eval + the evolvable Genome (weights)
+  nn_eval.py      NumPy MLP evaluator (residual) + NNGenome
   search.py       minimax + alpha-beta + iterative deepening (fixed)
+  rules.py        draw rules (perpetual-check house rule) + game-over helpers
   engine.py       Engine class tying eval + search together
-chess_io/
-  pgn.py          record games as PGN
-selfplay.py       engine-vs-engine demo (Phase 1 acceptance check)
-play.py           human-vs-engine terminal CLI
-tests/
-  test_engine.py  legality + tactics + eval + genome tests
+ga/               genome ops, matches, tournaments, evolution loop, knockout
+opponent_model/   per-user model + adaptive engine (Mode F3)
+chess_io/         record games as PGN
+experience_pool.py / deploy.py / pipeline.py   continual collect/train/deploy
+selfplay.py / play.py / evolve.py / adaptive_demo.py   runnable entry points
+tests/            five test suites
 ```
 
-## What's next (not built yet)
-
-Phase 2 — a genetic algorithm that evolves the `Genome` weights through
-self-play tournaments, producing a rising strength curve. See `../PROJECT_GUIDE.md`
-build order. Phase 1 stops here, on purpose, so the engine can be verified first.
-```
+The continual loop writes `pool/` (experience pool) and `deployed/` (champion
+registry); both are local artifacts, regenerated by running the pipeline.
